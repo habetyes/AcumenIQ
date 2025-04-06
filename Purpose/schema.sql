@@ -1,381 +1,6 @@
---
--- PostgreSQL database dump
---
+-- This file contains the SQL commands to create the database schema for the AccumenIQ application.
 
--- Dumped from database version 16.1
--- Dumped by pg_dump version 17.2
-
--- Started on 2025-04-05 20:01:42
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 249 (class 1255 OID 25020)
--- Name: upsert_admin_discharge_data(); Type: PROCEDURE; Schema: public; Owner: postgres
---
-
-CREATE PROCEDURE public.upsert_admin_discharge_data()
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    rec stg_admin_discharge%ROWTYPE;
-BEGIN
-    FOR rec IN SELECT * FROM stg_admin_discharge LOOP
-        BEGIN
-            INSERT INTO admin_discharge (
-                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
-                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id
-            )
-            VALUES (
-                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
-                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
-                rec.patient_id,rec.patient_master_id
-            )
-            ON CONFLICT (form_id)
-            DO UPDATE SET
-                name               = EXCLUDED.name,
-                status             = EXCLUDED.status,
-                casefile_id        = EXCLUDED.casefile_id,
-                evaluation_id      = EXCLUDED.evaluation_id,
-                patient_process_id = EXCLUDED.patient_process_id,
-                created_at         = EXCLUDED.created_at,
-                created_by         = EXCLUDED.created_by,
-                updated_at         = EXCLUDED.updated_at,
-                updated_by         = EXCLUDED.updated_by,
-                evaluation_content = EXCLUDED.evaluation_content,
-                patient_id         = EXCLUDED.patient_id,
-                patient_master_id  = EXCLUDED.patient_master_id;
-        EXCEPTION
-            WHEN OTHERS THEN
-                -- Log the error for this row along with the form_id
-                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
-                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_admin_discharge_data');
-        END;
-    END LOOP;
-END;
-$$;
-
-
-ALTER PROCEDURE public.upsert_admin_discharge_data() OWNER TO postgres;
-
---
--- TOC entry 248 (class 1255 OID 24885)
--- Name: upsert_ama_forms_data(); Type: PROCEDURE; Schema: public; Owner: postgres
---
-
-CREATE PROCEDURE public.upsert_ama_forms_data()
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    rec stg_ama_forms%ROWTYPE;
-BEGIN
-    FOR rec IN SELECT * FROM stg_ama_forms LOOP
-        BEGIN
-            INSERT INTO ama_forms (
-                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
-                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id
-            )
-            VALUES (
-                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
-                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
-                rec.patient_id,rec.patient_master_id
-            )
-            ON CONFLICT (form_id)
-            DO UPDATE SET
-                name               = EXCLUDED.name,
-                status             = EXCLUDED.status,
-                casefile_id        = EXCLUDED.casefile_id,
-                evaluation_id      = EXCLUDED.evaluation_id,
-                patient_process_id = EXCLUDED.patient_process_id,
-                created_at         = EXCLUDED.created_at,
-                created_by         = EXCLUDED.created_by,
-                updated_at         = EXCLUDED.updated_at,
-                updated_by         = EXCLUDED.updated_by,
-                evaluation_content = EXCLUDED.evaluation_content,
-                patient_id         = EXCLUDED.patient_id,
-                patient_master_id  = EXCLUDED.patient_master_id;
-        EXCEPTION
-            WHEN OTHERS THEN
-                -- Log the error for this row along with the form_id
-                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
-                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_ama_forms_data');
-        END;
-    END LOOP;
-END;
-$$;
-
-
-ALTER PROCEDURE public.upsert_ama_forms_data() OWNER TO postgres;
-
---
--- TOC entry 235 (class 1255 OID 24979)
--- Name: upsert_detox_discharge_forms_data(); Type: PROCEDURE; Schema: public; Owner: postgres
---
-
-CREATE PROCEDURE public.upsert_detox_discharge_forms_data()
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    rec stg_detox_forms%ROWTYPE;
-BEGIN
-    FOR rec IN SELECT * FROM stg_detox_forms LOOP
-        BEGIN
-            INSERT INTO detox_forms (
-                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
-                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id, step_down_value, transferred
-            )
-            VALUES (
-                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
-                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
-                rec.patient_id,rec.patient_master_id, rec.step_down_value, rec.transferred
-            )
-            ON CONFLICT (form_id)
-            DO UPDATE SET
-                name               = EXCLUDED.name,
-                status             = EXCLUDED.status,
-                casefile_id        = EXCLUDED.casefile_id,
-                evaluation_id      = EXCLUDED.evaluation_id,
-                patient_process_id = EXCLUDED.patient_process_id,
-                created_at         = EXCLUDED.created_at,
-                created_by         = EXCLUDED.created_by,
-                updated_at         = EXCLUDED.updated_at,
-                updated_by         = EXCLUDED.updated_by,
-                evaluation_content = EXCLUDED.evaluation_content,
-                patient_id         = EXCLUDED.patient_id,
-                patient_master_id  = EXCLUDED.patient_master_id,
-                step_down_value    = EXCLUDED.step_down_value,
-                transferred        = EXCLUDED.transferred;
-        EXCEPTION
-            WHEN OTHERS THEN
-                -- Log the error for this row along with the form_id
-                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
-                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_detox_discharge_forms_data');
-        END;
-    END LOOP;
-END;
-$$;
-
-
-ALTER PROCEDURE public.upsert_detox_discharge_forms_data() OWNER TO postgres;
-
---
--- TOC entry 236 (class 1255 OID 24862)
--- Name: upsert_latest_data(); Type: PROCEDURE; Schema: public; Owner: postgres
---
-
-CREATE PROCEDURE public.upsert_latest_data()
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-    rec stg_latest%ROWTYPE;
-BEGIN
-    FOR rec IN SELECT * FROM stg_latest LOOP
-        BEGIN
-            INSERT INTO latest (
-                casefile_id, patient_id, patient_master_id, first_name, last_name, gender, 
-                admission_date, discharge_date, anticipated_discharge_date, discharge_type, 
-                discharge_type_code, referrer_name, mr_number, payment_method, 
-                payment_method_category, created_at, last_updated_at, insurance_company, 
-                level_of_care, program, location_id, location_name, record_source
-            )
-            VALUES (
-                rec.casefile_id, rec.patient_id, rec.patient_master_id, rec.first_name, rec.last_name, rec.gender, 
-                rec.admission_date, rec.discharge_date, rec.anticipated_discharge_date, rec.discharge_type, 
-                rec.discharge_type_code, rec.referrer_name, rec.mr_number, rec.payment_method, 
-                rec.payment_method_category, rec.created_at, rec.last_updated_at, rec.insurance_company, 
-                rec.level_of_care, rec.program, rec.location_id, rec.location_name, rec.record_source
-            )
-            ON CONFLICT (casefile_id)
-            DO UPDATE SET
-                patient_id = EXCLUDED.patient_id,
-                patient_master_id = EXCLUDED.patient_master_id,
-                first_name = EXCLUDED.first_name,
-                last_name = EXCLUDED.last_name,
-                gender = EXCLUDED.gender,
-                admission_date = EXCLUDED.admission_date,
-                discharge_date = EXCLUDED.discharge_date,
-                anticipated_discharge_date = EXCLUDED.anticipated_discharge_date,
-                discharge_type = EXCLUDED.discharge_type,
-                discharge_type_code = EXCLUDED.discharge_type_code,
-                referrer_name = EXCLUDED.referrer_name,
-                mr_number = EXCLUDED.mr_number,
-                payment_method = EXCLUDED.payment_method,
-                payment_method_category = EXCLUDED.payment_method_category,
-                created_at = EXCLUDED.created_at,
-                last_updated_at = EXCLUDED.last_updated_at,
-                insurance_company = EXCLUDED.insurance_company,
-                level_of_care = EXCLUDED.level_of_care,
-                program = EXCLUDED.program,
-                location_id = EXCLUDED.location_id,
-                location_name = EXCLUDED.location_name,
-                record_source = EXCLUDED.record_source;
-        EXCEPTION
-            WHEN OTHERS THEN
-                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
-                VALUES (rec.casefile_id, SQLERRM, NOW(), 'upsert_latest_data');
-        END;
-    END LOOP;
-END;
-$$;
-
-
-ALTER PROCEDURE public.upsert_latest_data() OWNER TO postgres;
-
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- TOC entry 227 (class 1259 OID 25007)
--- Name: admin_discharge; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.admin_discharge (
-    form_id bigint,
-    name text,
-    status text,
-    casefile_id text,
-    evaluation_id bigint,
-    patient_process_id bigint,
-    created_at timestamp without time zone,
-    created_by text,
-    updated_at timestamp without time zone,
-    updated_by text,
-    evaluation_content text,
-    patient_id text,
-    patient_master_id text
-);
-
-
-ALTER TABLE public.admin_discharge OWNER TO postgres;
-
---
--- TOC entry 220 (class 1259 OID 24840)
--- Name: ama_forms; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.ama_forms (
-    form_id bigint,
-    name text,
-    status text,
-    casefile_id text,
-    evaluation_id bigint,
-    patient_process_id bigint,
-    created_at timestamp without time zone,
-    created_by text,
-    updated_at timestamp without time zone,
-    updated_by text,
-    evaluation_content text,
-    patient_id text,
-    patient_master_id text
-);
-
-
-ALTER TABLE public.ama_forms OWNER TO postgres;
-
---
--- TOC entry 231 (class 1259 OID 25195)
--- Name: calendar; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.calendar (
-    date date,
-    year integer,
-    month integer,
-    day integer,
-    quarter integer,
-    week bigint,
-    day_of_week integer,
-    weekday_name text,
-    month_name text,
-    is_weekend bigint
-);
-
-
-ALTER TABLE public.calendar OWNER TO postgres;
-
---
--- TOC entry 224 (class 1259 OID 24959)
--- Name: detox_forms; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.detox_forms (
-    form_id bigint,
-    name text,
-    status text,
-    casefile_id text,
-    evaluation_id bigint,
-    patient_process_id bigint,
-    created_at timestamp without time zone,
-    created_by text,
-    updated_at timestamp without time zone,
-    updated_by text,
-    evaluation_content text,
-    patient_id text,
-    patient_master_id text,
-    step_down_value text,
-    transferred text
-);
-
-
-ALTER TABLE public.detox_forms OWNER TO postgres;
-
---
--- TOC entry 222 (class 1259 OID 24854)
--- Name: error_log; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.error_log (
-    error_log_id integer NOT NULL,
-    casefile_id text,
-    error_message text NOT NULL,
-    error_time timestamp without time zone NOT NULL,
-    procedure_name text
-);
-
-
-ALTER TABLE public.error_log OWNER TO postgres;
-
---
--- TOC entry 221 (class 1259 OID 24853)
--- Name: error_log_error_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.error_log_error_log_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.error_log_error_log_id_seq OWNER TO postgres;
-
---
--- TOC entry 4928 (class 0 OID 0)
--- Dependencies: 221
--- Name: error_log_error_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.error_log_error_log_id_seq OWNED BY public.error_log.error_log_id;
-
-
---
--- TOC entry 219 (class 1259 OID 24827)
--- Name: latest; Type: TABLE; Schema: public; Owner: postgres
---
-
+-- Tables
 CREATE TABLE public.latest (
     casefile_id text,
     patient_id text,
@@ -403,60 +28,6 @@ CREATE TABLE public.latest (
     record_source text
 );
 
-
-ALTER TABLE public.latest OWNER TO postgres;
-
---
--- TOC entry 217 (class 1259 OID 24787)
--- Name: program_history; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.program_history (
-    casefile_id text,
-    patient_id text,
-    patient_master_id text,
-    first_name text,
-    last_name text,
-    program_name text,
-    start_date timestamp without time zone,
-    logged_by text,
-    logged_at timestamp without time zone,
-    program_history_pk integer NOT NULL
-);
-
-
-ALTER TABLE public.program_history OWNER TO postgres;
-
---
--- TOC entry 228 (class 1259 OID 25070)
--- Name: program_history_program_history_pk_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.program_history_program_history_pk_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.program_history_program_history_pk_seq OWNER TO postgres;
-
---
--- TOC entry 4929 (class 0 OID 0)
--- Dependencies: 228
--- Name: program_history_program_history_pk_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.program_history_program_history_pk_seq OWNED BY public.program_history.program_history_pk;
-
-
---
--- TOC entry 230 (class 1259 OID 25126)
--- Name: ref_discharge_types; Type: TABLE; Schema: public; Owner: postgres
---
-
 CREATE TABLE public.ref_discharge_types (
     discharge_type_code text,
     discharge_type text,
@@ -467,13 +38,6 @@ CREATE TABLE public.ref_discharge_types (
 );
 
 
-ALTER TABLE public.ref_discharge_types OWNER TO postgres;
-
---
--- TOC entry 229 (class 1259 OID 25087)
--- Name: ref_program_types; Type: TABLE; Schema: public; Owner: postgres
---
-
 CREATE TABLE public.ref_program_types (
     program text,
     program_level text,
@@ -482,13 +46,6 @@ CREATE TABLE public.ref_program_types (
     program_location text
 );
 
-
-ALTER TABLE public.ref_program_types OWNER TO postgres;
-
---
--- TOC entry 226 (class 1259 OID 25002)
--- Name: stg_admin_discharge; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.stg_admin_discharge (
     form_id bigint,
@@ -507,13 +64,6 @@ CREATE TABLE public.stg_admin_discharge (
 );
 
 
-ALTER TABLE public.stg_admin_discharge OWNER TO postgres;
-
---
--- TOC entry 223 (class 1259 OID 24878)
--- Name: stg_ama_forms; Type: TABLE; Schema: public; Owner: postgres
---
-
 CREATE TABLE public.stg_ama_forms (
     form_id bigint,
     name text,
@@ -530,13 +80,6 @@ CREATE TABLE public.stg_ama_forms (
     patient_master_id text
 );
 
-
-ALTER TABLE public.stg_ama_forms OWNER TO postgres;
-
---
--- TOC entry 225 (class 1259 OID 24967)
--- Name: stg_detox_forms; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.stg_detox_forms (
     form_id bigint,
@@ -556,13 +99,6 @@ CREATE TABLE public.stg_detox_forms (
     transferred text
 );
 
-
-ALTER TABLE public.stg_detox_forms OWNER TO postgres;
-
---
--- TOC entry 218 (class 1259 OID 24799)
--- Name: stg_latest; Type: TABLE; Schema: public; Owner: postgres
---
 
 CREATE TABLE public.stg_latest (
     casefile_id text,
@@ -592,13 +128,162 @@ CREATE TABLE public.stg_latest (
 );
 
 
-ALTER TABLE public.stg_latest OWNER TO postgres;
+CREATE TABLE public.program_history (
+    casefile_id text,
+    patient_id text,
+    patient_master_id text,
+    first_name text,
+    last_name text,
+    program_name text,
+    start_date timestamp without time zone,
+    logged_by text,
+    logged_at timestamp without time zone,
+    program_history_pk integer NOT NULL
+);
 
---
--- TOC entry 232 (class 1259 OID 25282)
--- Name: vw_program_history; Type: MATERIALIZED VIEW; Schema: public; Owner: postgres
---
 
+CREATE TABLE public.admin_discharge (
+    form_id bigint,
+    name text,
+    status text,
+    casefile_id text,
+    evaluation_id bigint,
+    patient_process_id bigint,
+    created_at timestamp without time zone,
+    created_by text,
+    updated_at timestamp without time zone,
+    updated_by text,
+    evaluation_content text,
+    patient_id text,
+    patient_master_id text
+);
+
+
+CREATE TABLE public.ama_forms (
+    form_id bigint,
+    name text,
+    status text,
+    casefile_id text,
+    evaluation_id bigint,
+    patient_process_id bigint,
+    created_at timestamp without time zone,
+    created_by text,
+    updated_at timestamp without time zone,
+    updated_by text,
+    evaluation_content text,
+    patient_id text,
+    patient_master_id text
+);
+
+CREATE TABLE public.calendar (
+    date date,
+    year integer,
+    month integer,
+    day integer,
+    quarter integer,
+    week bigint,
+    day_of_week integer,
+    weekday_name text,
+    month_name text,
+    is_weekend bigint
+);
+
+
+CREATE TABLE public.detox_forms (
+    form_id bigint,
+    name text,
+    status text,
+    casefile_id text,
+    evaluation_id bigint,
+    patient_process_id bigint,
+    created_at timestamp without time zone,
+    created_by text,
+    updated_at timestamp without time zone,
+    updated_by text,
+    evaluation_content text,
+    patient_id text,
+    patient_master_id text,
+    step_down_value text,
+    transferred text
+);
+
+
+CREATE TABLE public.error_log (
+    error_log_id integer NOT NULL,
+    casefile_id text,
+    error_message text NOT NULL,
+    error_time timestamp without time zone NOT NULL,
+    procedure_name text
+);
+
+
+-- Sequences
+CREATE SEQUENCE public.error_log_error_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+CREATE SEQUENCE public.program_history_program_history_pk_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+-- Alter Tables
+ALTER TABLE ONLY public.error_log ALTER COLUMN error_log_id SET DEFAULT nextval('public.error_log_error_log_id_seq'::regclass);
+
+ALTER TABLE ONLY public.program_history ALTER COLUMN program_history_pk SET DEFAULT nextval('public.program_history_program_history_pk_seq'::regclass);
+
+
+ALTER TABLE ONLY public.admin_discharge
+    ADD CONSTRAINT admin_unique_form_id UNIQUE (form_id);
+
+
+ALTER TABLE ONLY public.detox_forms
+    ADD CONSTRAINT detox_unique_form_id UNIQUE (form_id);
+
+
+ALTER TABLE ONLY public.error_log
+    ADD CONSTRAINT error_log_pkey PRIMARY KEY (error_log_id);
+
+
+ALTER TABLE ONLY public.program_history
+    ADD CONSTRAINT program_history_pkey PRIMARY KEY (program_history_pk);
+
+
+ALTER TABLE ONLY public.stg_admin_discharge
+    ADD CONSTRAINT stg_admin_unique_form_id UNIQUE (form_id);
+
+
+ALTER TABLE ONLY public.stg_ama_forms
+    ADD CONSTRAINT stg_ama_forms_form_id_key UNIQUE (form_id);
+
+
+ALTER TABLE ONLY public.stg_detox_forms
+    ADD CONSTRAINT stg_detox_unique_form_id UNIQUE (form_id);
+
+
+ALTER TABLE ONLY public.stg_latest
+    ADD CONSTRAINT stg_unique_casefile_id UNIQUE (casefile_id);
+
+
+ALTER TABLE ONLY public.latest
+    ADD CONSTRAINT unique_casefile_id UNIQUE (casefile_id);
+
+
+ALTER TABLE ONLY public.ama_forms
+    ADD CONSTRAINT unique_form_id UNIQUE (form_id);
+
+
+
+-- Materialized Views
 CREATE MATERIALIZED VIEW public.vw_program_history AS
  WITH ph AS (
          SELECT ph.casefile_id,
@@ -765,13 +450,6 @@ CREATE MATERIALIZED VIEW public.vw_program_history AS
   WITH NO DATA;
 
 
-ALTER MATERIALIZED VIEW public.vw_program_history OWNER TO postgres;
-
---
--- TOC entry 233 (class 1259 OID 25317)
--- Name: vw_daily_census; Type: MATERIALIZED VIEW; Schema: public; Owner: postgres
---
-
 CREATE MATERIALIZED VIEW public.vw_daily_census AS
  WITH calendar AS (
          SELECT (generate_series(('2024-01-01'::date)::timestamp with time zone, (CURRENT_DATE)::timestamp with time zone, '1 day'::interval))::date AS census_date
@@ -797,13 +475,6 @@ CREATE MATERIALIZED VIEW public.vw_daily_census AS
   ORDER BY census_date, program_category
   WITH NO DATA;
 
-
-ALTER MATERIALIZED VIEW public.vw_daily_census OWNER TO postgres;
-
---
--- TOC entry 234 (class 1259 OID 25364)
--- Name: vw_discharges; Type: MATERIALIZED VIEW; Schema: public; Owner: postgres
---
 
 CREATE MATERIALIZED VIEW public.vw_discharges AS
  WITH discharges AS (
@@ -840,117 +511,187 @@ CREATE MATERIALIZED VIEW public.vw_discharges AS
   WITH NO DATA;
 
 
-ALTER MATERIALIZED VIEW public.vw_discharges OWNER TO postgres;
+-- Procedures
 
---
--- TOC entry 4756 (class 2604 OID 24857)
--- Name: error_log error_log_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.error_log ALTER COLUMN error_log_id SET DEFAULT nextval('public.error_log_error_log_id_seq'::regclass);
-
-
---
--- TOC entry 4755 (class 2604 OID 25071)
--- Name: program_history program_history_pk; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.program_history ALTER COLUMN program_history_pk SET DEFAULT nextval('public.program_history_program_history_pk_seq'::regclass);
-
-
---
--- TOC entry 4776 (class 2606 OID 25015)
--- Name: admin_discharge admin_unique_form_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.admin_discharge
-    ADD CONSTRAINT admin_unique_form_id UNIQUE (form_id);
-
-
---
--- TOC entry 4770 (class 2606 OID 24978)
--- Name: detox_forms detox_unique_form_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.detox_forms
-    ADD CONSTRAINT detox_unique_form_id UNIQUE (form_id);
-
-
---
--- TOC entry 4766 (class 2606 OID 24861)
--- Name: error_log error_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.error_log
-    ADD CONSTRAINT error_log_pkey PRIMARY KEY (error_log_id);
-
-
---
--- TOC entry 4758 (class 2606 OID 25073)
--- Name: program_history program_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.program_history
-    ADD CONSTRAINT program_history_pkey PRIMARY KEY (program_history_pk);
+CREATE PROCEDURE public.upsert_admin_discharge_data()
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    rec stg_admin_discharge%ROWTYPE;
+BEGIN
+    FOR rec IN SELECT * FROM stg_admin_discharge LOOP
+        BEGIN
+            INSERT INTO admin_discharge (
+                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
+                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id
+            )
+            VALUES (
+                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
+                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
+                rec.patient_id,rec.patient_master_id
+            )
+            ON CONFLICT (form_id)
+            DO UPDATE SET
+                name               = EXCLUDED.name,
+                status             = EXCLUDED.status,
+                casefile_id        = EXCLUDED.casefile_id,
+                evaluation_id      = EXCLUDED.evaluation_id,
+                patient_process_id = EXCLUDED.patient_process_id,
+                created_at         = EXCLUDED.created_at,
+                created_by         = EXCLUDED.created_by,
+                updated_at         = EXCLUDED.updated_at,
+                updated_by         = EXCLUDED.updated_by,
+                evaluation_content = EXCLUDED.evaluation_content,
+                patient_id         = EXCLUDED.patient_id,
+                patient_master_id  = EXCLUDED.patient_master_id;
+        EXCEPTION
+            WHEN OTHERS THEN
+                -- Log the error for this row along with the form_id
+                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
+                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_admin_discharge_data');
+        END;
+    END LOOP;
+END;
+$$;
 
 
---
--- TOC entry 4774 (class 2606 OID 25013)
--- Name: stg_admin_discharge stg_admin_unique_form_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.stg_admin_discharge
-    ADD CONSTRAINT stg_admin_unique_form_id UNIQUE (form_id);
-
-
---
--- TOC entry 4768 (class 2606 OID 24884)
--- Name: stg_ama_forms stg_ama_forms_form_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.stg_ama_forms
-    ADD CONSTRAINT stg_ama_forms_form_id_key UNIQUE (form_id);
-
-
---
--- TOC entry 4772 (class 2606 OID 24976)
--- Name: stg_detox_forms stg_detox_unique_form_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.stg_detox_forms
-    ADD CONSTRAINT stg_detox_unique_form_id UNIQUE (form_id);
-
-
---
--- TOC entry 4760 (class 2606 OID 24852)
--- Name: stg_latest stg_unique_casefile_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.stg_latest
-    ADD CONSTRAINT stg_unique_casefile_id UNIQUE (casefile_id);
-
-
---
--- TOC entry 4762 (class 2606 OID 24850)
--- Name: latest unique_casefile_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.latest
-    ADD CONSTRAINT unique_casefile_id UNIQUE (casefile_id);
+CREATE PROCEDURE public.upsert_ama_forms_data()
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    rec stg_ama_forms%ROWTYPE;
+BEGIN
+    FOR rec IN SELECT * FROM stg_ama_forms LOOP
+        BEGIN
+            INSERT INTO ama_forms (
+                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
+                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id
+            )
+            VALUES (
+                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
+                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
+                rec.patient_id,rec.patient_master_id
+            )
+            ON CONFLICT (form_id)
+            DO UPDATE SET
+                name               = EXCLUDED.name,
+                status             = EXCLUDED.status,
+                casefile_id        = EXCLUDED.casefile_id,
+                evaluation_id      = EXCLUDED.evaluation_id,
+                patient_process_id = EXCLUDED.patient_process_id,
+                created_at         = EXCLUDED.created_at,
+                created_by         = EXCLUDED.created_by,
+                updated_at         = EXCLUDED.updated_at,
+                updated_by         = EXCLUDED.updated_by,
+                evaluation_content = EXCLUDED.evaluation_content,
+                patient_id         = EXCLUDED.patient_id,
+                patient_master_id  = EXCLUDED.patient_master_id;
+        EXCEPTION
+            WHEN OTHERS THEN
+                -- Log the error for this row along with the form_id
+                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
+                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_ama_forms_data');
+        END;
+    END LOOP;
+END;
+$$;
 
 
---
--- TOC entry 4764 (class 2606 OID 24877)
--- Name: ama_forms unique_form_id; Type: CONSTRAINT; Schema: public; Owner: postgres
---
+CREATE PROCEDURE public.upsert_detox_discharge_forms_data()
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    rec stg_detox_forms%ROWTYPE;
+BEGIN
+    FOR rec IN SELECT * FROM stg_detox_forms LOOP
+        BEGIN
+            INSERT INTO detox_forms (
+                form_id, name, status,casefile_id,evaluation_id,patient_process_id, created_at, 
+                created_by,updated_at,updated_by,evaluation_content,patient_id,patient_master_id, step_down_value, transferred
+            )
+            VALUES (
+                rec.form_id,rec.name,rec.status,rec.casefile_id,rec.evaluation_id,rec.patient_process_id, 
+                rec.created_at, rec.created_by,rec.updated_at,rec.updated_by,rec.evaluation_content, 
+                rec.patient_id,rec.patient_master_id, rec.step_down_value, rec.transferred
+            )
+            ON CONFLICT (form_id)
+            DO UPDATE SET
+                name               = EXCLUDED.name,
+                status             = EXCLUDED.status,
+                casefile_id        = EXCLUDED.casefile_id,
+                evaluation_id      = EXCLUDED.evaluation_id,
+                patient_process_id = EXCLUDED.patient_process_id,
+                created_at         = EXCLUDED.created_at,
+                created_by         = EXCLUDED.created_by,
+                updated_at         = EXCLUDED.updated_at,
+                updated_by         = EXCLUDED.updated_by,
+                evaluation_content = EXCLUDED.evaluation_content,
+                patient_id         = EXCLUDED.patient_id,
+                patient_master_id  = EXCLUDED.patient_master_id,
+                step_down_value    = EXCLUDED.step_down_value,
+                transferred        = EXCLUDED.transferred;
+        EXCEPTION
+            WHEN OTHERS THEN
+                -- Log the error for this row along with the form_id
+                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
+                VALUES (rec.form_id, SQLERRM, NOW(), 'upsert_detox_discharge_forms_data');
+        END;
+    END LOOP;
+END;
+$$;
 
-ALTER TABLE ONLY public.ama_forms
-    ADD CONSTRAINT unique_form_id UNIQUE (form_id);
 
-
--- Completed on 2025-04-05 20:01:42
-
---
--- PostgreSQL database dump complete
---
-
+CREATE PROCEDURE public.upsert_latest_data()
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    rec stg_latest%ROWTYPE;
+BEGIN
+    FOR rec IN SELECT * FROM stg_latest LOOP
+        BEGIN
+            INSERT INTO latest (
+                casefile_id, patient_id, patient_master_id, first_name, last_name, gender, 
+                admission_date, discharge_date, anticipated_discharge_date, discharge_type, 
+                discharge_type_code, referrer_name, mr_number, payment_method, 
+                payment_method_category, created_at, last_updated_at, insurance_company, 
+                level_of_care, program, location_id, location_name, record_source
+            )
+            VALUES (
+                rec.casefile_id, rec.patient_id, rec.patient_master_id, rec.first_name, rec.last_name, rec.gender, 
+                rec.admission_date, rec.discharge_date, rec.anticipated_discharge_date, rec.discharge_type, 
+                rec.discharge_type_code, rec.referrer_name, rec.mr_number, rec.payment_method, 
+                rec.payment_method_category, rec.created_at, rec.last_updated_at, rec.insurance_company, 
+                rec.level_of_care, rec.program, rec.location_id, rec.location_name, rec.record_source
+            )
+            ON CONFLICT (casefile_id)
+            DO UPDATE SET
+                patient_id = EXCLUDED.patient_id,
+                patient_master_id = EXCLUDED.patient_master_id,
+                first_name = EXCLUDED.first_name,
+                last_name = EXCLUDED.last_name,
+                gender = EXCLUDED.gender,
+                admission_date = EXCLUDED.admission_date,
+                discharge_date = EXCLUDED.discharge_date,
+                anticipated_discharge_date = EXCLUDED.anticipated_discharge_date,
+                discharge_type = EXCLUDED.discharge_type,
+                discharge_type_code = EXCLUDED.discharge_type_code,
+                referrer_name = EXCLUDED.referrer_name,
+                mr_number = EXCLUDED.mr_number,
+                payment_method = EXCLUDED.payment_method,
+                payment_method_category = EXCLUDED.payment_method_category,
+                created_at = EXCLUDED.created_at,
+                last_updated_at = EXCLUDED.last_updated_at,
+                insurance_company = EXCLUDED.insurance_company,
+                level_of_care = EXCLUDED.level_of_care,
+                program = EXCLUDED.program,
+                location_id = EXCLUDED.location_id,
+                location_name = EXCLUDED.location_name,
+                record_source = EXCLUDED.record_source;
+        EXCEPTION
+            WHEN OTHERS THEN
+                INSERT INTO error_log (casefile_id, error_message, error_time, procedure_name)
+                VALUES (rec.casefile_id, SQLERRM, NOW(), 'upsert_latest_data');
+        END;
+    END LOOP;
+END;
+$$;
