@@ -695,3 +695,16 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION truncate_table_dynamic(p_table_name text)
+RETURNS void AS $$
+BEGIN
+  EXECUTE 'TRUNCATE TABLE ' || quote_ident(p_table_name);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_max_last_updated()
+RETURNS text AS $$
+    SELECT to_char(max(last_updated_at), 'YYYY-MM-DD') FROM latest;
+$$ LANGUAGE SQL;

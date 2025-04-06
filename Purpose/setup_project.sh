@@ -13,8 +13,8 @@ mkdir -p dashboard/src/components
 ###############################
 # Create AWS Lambda Script
 ###############################
-echo "Creating lambda/lambda_function.py..."
-cat > lambda/lambda_function.py <<'EOF'
+echo "Creating lambda/lambda_update.py..."
+cat > lambda/lambda_update.py <<'EOF'
 import os
 import json
 import logging
@@ -251,8 +251,8 @@ echo "Creating dashboard/src/supabaseClient.js..."
 cat > dashboard/src/supabaseClient.js <<'EOF'
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 EOF
@@ -532,14 +532,14 @@ services:
       - ./dashboard/src:/app/src
       - ./dashboard/public:/app/public
     environment:
-      - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
-      - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
 EOF
 
 echo "Creating sample .env file for frontend environment variables..."
 cat > .env <<'EOF'
-REACT_APP_SUPABASE_URL=https://your-production-supabase-url.supabase.co
-REACT_APP_SUPABASE_ANON_KEY=your-production-supabase-anon-key
+SUPABASE_URL=https://your-production-supabase-url.supabase.co
+SUPABASE_KEY=your-production-supabase-anon-key
 EOF
 
 echo "Project setup complete!"

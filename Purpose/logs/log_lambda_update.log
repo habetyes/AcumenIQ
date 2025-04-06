@@ -1,0 +1,3 @@
+
+2025-04-06 16:49:38,457 - root - INFO - stg_latest table truncated successfully
+2025-04-06 16:49:38,915 - root - INFO - Inserted 358 records into stg_latest: 2025-03-30 to 2025-04-06
