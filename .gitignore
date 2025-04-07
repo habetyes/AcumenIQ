@@ -1,4 +1,60 @@
+# Logs
+*.log
+logs/
+
+# Environment files (keep these out of version control!)
+.env
+.env.local
+.env.*.local
+
+# Node (React frontend)
+node_modules/
+bower_components/
+
+# Build directories for React
+build/
+dist/
+.cache/
+
+# Python (Lambda/ETL) and common artifacts
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+.eggs/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+instance/
+.webassets-cache
+
+# AWS SAM / Lambda packaging artifacts
+.aws-sam/
+*.zip
+
+# SQL files
+# If you want to track your schema definitions, use an exception (adjust as needed)
+*.sql
+!*.schema.sql
+
+# Docker
+docker-compose.override.yml
+docker-compose*.yml
+*.dockerfile
+*.pid
+
+# IDE and Editor directories/files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# MISC
 *.xlsx
 *.csv
-.env
-test.ipynb

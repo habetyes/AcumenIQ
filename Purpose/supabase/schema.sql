@@ -695,3 +695,69 @@ BEGIN
     END LOOP;
 END;
 $$;
+
+-- DB Helper Functions
+
+CREATE OR REPLACE FUNCTION fetch_diff_records()
+RETURNS TABLE(casefile_id TEXT, patient_id TEXT, patient_master_id TEXT) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT s.casefile_id, s.patient_id, s.patient_master_id
+  FROM stg_latest s
+  LEFT JOIN latest l ON s.casefile_id = l.casefile_id
+  WHERE l.casefile_id IS NULL OR s.program <> l.program;
+END;
+$$ LANGUAGE plpgsql STABLE;
+
+
+CREATE OR REPLACE FUNCTION truncate_table_dynamic(p_table_name text)
+RETURNS void AS $$
+BEGIN
+  EXECUTE 'TRUNCATE TABLE ' || quote_ident(p_table_name);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_max_last_updated()
+RETURNS text AS $$
+    SELECT to_char(max(last_updated_at), 'YYYY-MM-DD') FROM latest;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION form_get_max_last_updated(p_table_name text)
+RETURNS text AS $$
+DECLARE
+    result text;
+BEGIN
+    EXECUTE format(
+        'SELECT to_char(max(updated_at), ''YYYY-MM-DD'') FROM %I',
+        p_table_name
+    )
+    INTO result;
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION refresh_materialized_view(view_name text)
+RETURNS void 
+SECURITY DEFINER
+AS $$
+BEGIN
+    EXECUTE 'REFRESH MATERIALIZED VIEW ' || quote_ident(view_name);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION call_proc(p_proc_name text)
+RETURNS void AS $$
+BEGIN
+  EXECUTE format('CALL public.%I()', p_proc_name);
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- Change default statement timeouts
+alter role anon set statement_timeout = '20s'; 
+alter role authenticated set statement_timeout = '60s'; 
+alter role service_role set statement_timeout = '2min'; 
+NOTIFY pgrst, 'reload config'; -- Must run for Client API calls to observe changes

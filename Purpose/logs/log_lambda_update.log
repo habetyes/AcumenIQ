@@ -1,3 +1,81 @@
 
 2025-04-06 16:49:38,457 - root - INFO - stg_latest table truncated successfully
 2025-04-06 16:49:38,915 - root - INFO - Inserted 358 records into stg_latest: 2025-03-30 to 2025-04-06
+2025-04-07 01:42:51,537 - root - INFO - stg_latest table truncated successfully
+2025-04-07 01:42:52,309 - root - INFO - 362 records inserted into stg_latest: 2025-03-30 to 2025-04-07
+2025-04-07 01:44:49,496 - root - INFO - No program history found for patient 105077
+2025-04-07 01:44:55,652 - root - INFO - No program history found for patient 105086
+2025-04-07 01:45:11,948 - root - INFO - No program history found for patient 105088
+2025-04-07 01:45:38,045 - root - INFO - No program history found for patient 105237
+2025-04-07 01:45:51,381 - root - INFO - No program history found for patient 105009
+2025-04-07 01:45:57,123 - root - INFO - No program history found for patient 105239
+2025-04-07 01:46:09,280 - root - INFO - No program history found for patient 105135
+2025-04-07 01:46:50,445 - root - INFO - No program history found for patient 105078
+2025-04-07 01:47:01,412 - root - INFO - No program history found for patient 105189
+2025-04-07 01:47:13,294 - root - INFO - No program history found for patient 105083
+2025-04-07 01:47:16,577 - root - INFO - No program history found for patient 105014
+2025-04-07 01:47:18,509 - root - INFO - No program history found for patient 105127
+2025-04-07 01:47:21,509 - root - INFO - No program history found for patient 105229
+2025-04-07 01:47:26,184 - root - INFO - No program history found for patient 105072
+2025-04-07 01:47:28,359 - root - INFO - 390 program histories to update.
+2025-04-07 01:47:29,023 - root - ERROR - Error inserting records into program_history: {'code': '23505', 'details': 'Key (program_history_pk)=(1) already exists.', 'hint': None, 'message': 'duplicate key value violates unique constraint "program_history_pkey"'}
+2025-04-07 02:08:42,958 - root - INFO - stg_latest table truncated successfully
+2025-04-07 02:08:43,367 - root - INFO - 362 records inserted into stg_latest: 2025-03-30 to 2025-04-07
+2025-04-07 02:14:06,828 - root - INFO - No program history found for patient 105077
+2025-04-07 02:14:10,027 - root - INFO - No program history found for patient 105086
+2025-04-07 02:14:26,181 - root - INFO - No program history found for patient 105088
+2025-04-07 02:14:52,387 - root - INFO - No program history found for patient 105237
+2025-04-07 02:15:05,138 - root - INFO - No program history found for patient 105009
+2025-04-07 02:15:08,034 - root - INFO - No program history found for patient 105239
+2025-04-07 02:15:15,894 - root - INFO - No program history found for patient 105135
+2025-04-07 02:15:48,752 - root - INFO - No program history found for patient 105078
+2025-04-07 02:15:58,504 - root - INFO - No program history found for patient 105189
+2025-04-07 02:16:09,894 - root - INFO - No program history found for patient 105083
+2025-04-07 02:16:13,050 - root - INFO - No program history found for patient 105014
+2025-04-07 02:16:13,866 - root - INFO - No program history found for patient 105127
+2025-04-07 02:16:16,644 - root - INFO - No program history found for patient 105229
+2025-04-07 02:16:20,880 - root - INFO - No program history found for patient 105072
+2025-04-07 02:16:22,980 - root - INFO - 390 program histories to update.
+2025-04-07 02:16:23,605 - root - INFO - 390 records inserted into program_history: 2020-01-21 12:08:06 to 2025-04-07 00:01:51
+2025-04-07 02:31:00,411 - root - INFO - stg_latest table truncated successfully
+2025-04-07 02:31:00,801 - root - INFO - 362 records inserted into stg_latest: 2025-03-30 to 2025-04-07
+2025-04-07 02:32:41,512 - root - INFO - No program history found for patient 105077
+2025-04-07 02:32:46,530 - root - INFO - No program history found for patient 105086
+2025-04-07 02:33:00,926 - root - INFO - No program history found for patient 105088
+2025-04-07 02:33:32,753 - root - INFO - No program history found for patient 105237
+2025-04-07 02:33:44,995 - root - INFO - No program history found for patient 105009
+2025-04-07 02:33:48,799 - root - INFO - No program history found for patient 105239
+2025-04-07 02:33:57,265 - root - INFO - No program history found for patient 105135
+2025-04-07 02:34:38,751 - root - INFO - No program history found for patient 105078
+2025-04-07 02:34:47,182 - root - INFO - No program history found for patient 105189
+2025-04-07 02:34:55,865 - root - INFO - No program history found for patient 105083
+2025-04-07 02:34:58,503 - root - INFO - No program history found for patient 105014
+2025-04-07 02:34:59,329 - root - INFO - No program history found for patient 105127
+2025-04-07 02:35:01,036 - root - INFO - No program history found for patient 105229
+2025-04-07 02:35:06,608 - root - INFO - No program history found for patient 105072
+2025-04-07 02:35:09,280 - root - INFO - 390 program histories to update.
+2025-04-07 02:36:38,120 - root - INFO - 390 records inserted into program_history: 2020-01-21 12:08:06 to 2025-04-07 00:01:51
+2025-04-07 02:36:39,375 - root - INFO - Fetched 28 evaluations from KIPU API: Form ID: 856.
+2025-04-07 02:36:39,460 - root - INFO - stg_ama_forms table truncated successfully
+2025-04-07 02:36:39,530 - root - INFO - 28 records inserted into stg_ama_forms: 2025-03-30 to 2025-04-07
+2025-04-07 02:36:41,003 - root - INFO - Fetched 43 evaluations from KIPU API: Form ID: 1124.
+2025-04-07 02:37:56,738 - root - INFO - stg_detox_forms table truncated successfully
+2025-04-07 02:37:56,823 - root - INFO - 43 records inserted into stg_detox_forms: 2025-03-30 to 2025-04-07
+2025-04-07 02:46:15,072 - root - INFO - Fetched 3 evaluations from KIPU API: Form ID: 1523.
+2025-04-07 02:46:15,178 - root - INFO - stg_admin_discharge table truncated successfully
+2025-04-07 02:46:15,249 - root - INFO - 3 records inserted into stg_admin_discharge: 2025-03-28 to 2025-04-07
+2025-04-07 02:46:15,376 - root - ERROR - Error refreshing materialized view vw_program_history: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_program_history'}
+2025-04-07 02:46:15,430 - root - ERROR - Error refreshing materialized view vw_daily_census: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_daily_census'}
+2025-04-07 02:46:15,486 - root - ERROR - Error refreshing materialized view vw_discharges: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_discharges'}
+2025-04-07 02:55:15,191 - root - ERROR - Error refreshing materialized view vw_program_history: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_program_history'}
+2025-04-07 02:55:15,245 - root - ERROR - Error refreshing materialized view vw_daily_census: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_daily_census'}
+2025-04-07 02:55:15,298 - root - ERROR - Error refreshing materialized view vw_discharges: {'code': '42501', 'details': None, 'hint': None, 'message': 'must be owner of materialized view vw_discharges'}
+2025-04-07 03:10:35,082 - root - ERROR - Error refreshing materialized view vw_program_history: {'code': '57014', 'details': None, 'hint': None, 'message': 'canceling statement due to statement timeout'}
+2025-04-07 03:10:35,902 - root - INFO - Materialized view vw_daily_census refreshed successfully.
+2025-04-07 03:10:36,034 - root - INFO - Materialized view vw_discharges refreshed successfully.
+2025-04-07 03:17:14,846 - root - INFO - Materialized view vw_daily_census refreshed successfully.
+2025-04-07 03:17:23,142 - root - ERROR - Error refreshing materialized view vw_program_history: {'code': '57014', 'details': None, 'hint': None, 'message': 'canceling statement due to statement timeout'}
+2025-04-07 03:17:23,365 - root - INFO - Materialized view vw_discharges refreshed successfully.
+2025-04-07 03:34:27,668 - root - INFO - Materialized view vw_daily_census refreshed successfully.
+2025-04-07 03:34:40,149 - root - INFO - Materialized view vw_program_history refreshed successfully.
+2025-04-07 03:34:40,289 - root - INFO - Materialized view vw_discharges refreshed successfully.
