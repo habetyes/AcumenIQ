@@ -1,14 +1,30 @@
-version: '3.8'
 services:
+  # Development service: uses the Node container with hot reloading.
   dashboard:
+    container_name: purpose-dev-dashboard
     build:
       context: ./dashboard
       dockerfile: Dockerfile
+      target: development
     ports:
       - "3000:3000"
     volumes:
       - ./dashboard/src:/app/src
       - ./dashboard/public:/app/public
     environment:
+      - CHOKIDAR_USEPOLLING=true  # Useful for file-watching inside containers
       - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
       - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
+
+  # Production service: builds the static assets and serves them via Nginx.
+  dashboard-prod:
+    container_name: purpose-prod-dashboard
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+      target: production
+      args:
+        REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
+        REACT_APP_SUPABASE_ANON_KEY: ${REACT_APP_SUPABASE_ANON_KEY}
+    ports:
+      - "80:80"

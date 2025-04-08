@@ -519,7 +519,8 @@ for view in views:
     else:
         logger.info(f"Materialized view {view} refreshed successfully.")
 
-
+# @@TODO: Add Lambda Handler
+# @@TODO: Throw execution steps into a main function
 
 
 

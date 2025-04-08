@@ -23,9 +23,9 @@ function Dashboard() {
   const fetchData = async () => {
     // Fetch KPI data from the Supabase materialized view filtering by the selected date
     const { data: kpiData, error } = await supabase
-      .from('mv_kpi_daily')
+      .from('vw_daily_census')
       .select('*')
-      .eq('date', selectedDate);
+      .eq('census_date', selectedDate);
     if (error) {
       console.error('Error fetching KPI data:', error);
     } else {
