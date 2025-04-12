@@ -24,10 +24,10 @@ function DischargeTrends() {
 
   const fetchTrends = async () => {
     // Fetch discharge trends data filtered by date range and selected programs
-    let query = supabase.from('mv_discharge_trends')
+    let query = supabase.from('vw_discharges')
       .select('*')
-      .gte('date', startDate)
-      .lte('date', endDate);
+      .gte('discharge_date', startDate)
+      .lte('discharge_date', endDate);
 
     if (selectedPrograms.length > 0) {
       query = query.in('program', selectedPrograms);
@@ -39,12 +39,12 @@ function DischargeTrends() {
     } else {
       // Process data for chart.js
       const dates = [...new Set(data.map(item => item.date))].sort();
-      const dischargeTypes = [...new Set(data.map(item => item.discharge_type))];
+      const dischargeTypes = [...new Set(data.map(item => item.discharge_class))];
       
       const datasets = dischargeTypes.map(type => ({
         label: type,
         data: dates.map(date => {
-          const record = data.find(item => item.date === date && item.discharge_type === type);
+          const record = data.find(item => item.date === date && item.discharge_class === type);
           return record ? record.count : 0;
         }),
         fill: false
@@ -74,6 +74,18 @@ function DischargeTrends() {
           onChange={(e) => setEndDate(e.target.value)}
         />
         {/* A multi-select dropdown for programs could be added here */}
+        <TextField
+          label="Programs"
+          select
+          SelectProps={{
+            multiple: true,
+            value: selectedPrograms,
+            onChange: (e) => setSelectedPrograms(e.target.value),
+          }}
+          variant="outlined"
+          style={{ marginLeft: '1rem' }}
+        />
+          {/* Replace with actual program options */}
         <Button variant="contained" onClick={fetchTrends}>Load Trends</Button>
       </div>
       <div style={{ marginTop: '2rem' }}>

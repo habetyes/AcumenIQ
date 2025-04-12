@@ -55,10 +55,11 @@ function Dashboard() {
         {data.map((item, index) => (
           <Card key={index} style={{ minWidth: '200px' }}>
             <CardContent>
-              <h3>{item.program}</h3>
+              <h3>{item.program_category}</h3>
               <p>Census: {item.census}</p>
               <p>Admissions: {item.admissions}</p>
-              <p>Transfers: {item.transfers}</p>
+              <p>Transfers In: {item.transfer_in}</p>
+              <p>Transfers Out: {item.transfer_out}</p>
               <p>Discharges: {item.discharges}</p>
             </CardContent>
           </Card>

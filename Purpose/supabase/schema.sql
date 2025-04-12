@@ -467,12 +467,36 @@ CREATE MATERIALIZED VIEW public.vw_daily_census AS
            FROM (calendar cal
              JOIN filtered_programs fp ON (((cal.census_date >= fp.start_date) AND (cal.census_date < fp.end_date))))
           GROUP BY cal.census_date, fp.program_category
-        )
- SELECT census_date,
-    program_category,
-    census_count
-   FROM daily_census
-  ORDER BY census_date, program_category
+        ),
+
+		admission_or_xfer_in AS(
+			SELECT start_day, program_category, SUM(admission)-SUM(transferred_in) as admissions
+			,SUM(transferred_in) as transfer_in
+			FROM vw_program_history
+			GROUP BY 1,2
+		),
+
+		transfer_out_or_discharge AS(
+			SELECT end_day, program_category
+			,SUM(transferred_out) as transfer_out 
+			,SUM(discharged) as discharges
+			FROM vw_program_history
+			GROUP BY 1,2
+		)
+		
+ SELECT dc.census_date,
+    dc.program_category,
+    COALESCE(census_count,0) as census
+	,COALESCE(admissions,0) as admissions
+	,COALESCE(transfer_in,0) as transfer_in
+	,COALESCE(transfer_out,0) as transfer_out
+	,COALESCE(discharges,0) as discharges
+   FROM daily_census dc
+   LEFT JOIN admission_or_xfer_in a
+   	ON dc.census_date = a.start_day AND dc.program_category = a.program_category
+   LEFT JOIN transfer_out_or_discharge t
+   	ON dc.census_date = t.end_day AND dc.program_category = t.program_category
+  ORDER BY dc.census_date, dc.program_category
   WITH NO DATA;
 
 
