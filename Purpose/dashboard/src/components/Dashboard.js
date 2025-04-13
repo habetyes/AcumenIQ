@@ -90,33 +90,28 @@ function Dashboard() {
   });
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="dashboard-container">
       <h2>Purpose: Daily Census</h2>
-      <div>
+      <div className="dashboard-controls">
         <TextField
           type="date"
           value={selectedDate}
           onChange={handleDateChange}
         />
-        <Button variant="outlined" onClick={decrementDate} style={{ marginLeft: '1rem' }}>Previous Day</Button>
-        <Button variant="outlined" onClick={incrementDate} style={{ marginLeft: '0.5rem' }}>Next Day</Button>
+        <Button variant="outlined" onClick={decrementDate}>Previous Day</Button>
+        <Button variant="outlined" onClick={incrementDate}>Next Day</Button>
       </div>
-      <div style={{ display: 'flex', marginTop: '1rem', gap: '1rem' }}>
-        {/* Total Card */}
-        <Card style={{ minWidth: '200px', backgroundColor: '#f0f0f0' }}>
-          <CardContent>
-            <h3>Total</h3>
-            <p>Census: {totals.census}</p>
-            <p>Admissions: {totals.admissions}</p>
-            <p>Transfers In: {totals.transfer_in}</p>
-            <p>Transfers Out: {totals.transfer_out}</p>
-            <p>Discharges: {totals.discharges}</p>
-          </CardContent>
-        </Card>
-
+      <div className="dashboard-totals">
+        <p>Census: {totals.census}</p>
+        <p>Admissions: {totals.admissions}</p>
+        <p>Transfers In: {totals.transfer_in}</p>
+        <p>Transfers Out: {totals.transfer_out}</p>
+        <p>Discharges: {totals.discharges}</p>
+      </div>
+      <div className="dashboard-cards">
         {/* Individual Program Cards */}
         {sortedData.map((item, index) => (
-          <Card key={index} className="program-card" style={{ minWidth: '200px' }}>
+          <Card key={index} className="card program-card">
             <CardContent>
               <h3>{item.program_category}</h3>
               <p>Census: {item.census}</p>

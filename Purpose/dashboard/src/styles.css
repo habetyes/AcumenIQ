@@ -18,7 +18,53 @@ div {
 }
 
 .program-card {
-  background-color: #e8f5e9; /* Light green background */
+  background-color: #00838A; /* Purpose Branded background */
   border: 1px solid #c8e6c9; /* Slightly darker green border */
   border-radius: 5px;
+}
+
+.dashboard-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dashboard-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; /* Reduce gap to fit more cards */
+  justify-content: center;
+}
+
+.card {
+  flex: 1 1 calc(100% - 1rem); /* Full width on small screens */
+  max-width: 200px; /* Limit card width to fit 6 cards in a row */
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .card {
+    flex: 1 1 calc(33.333% - 1rem); /* Three cards per row on medium screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    flex: 1 1 calc(16.666% - 1rem); /* Six cards per row on large screens */
+  }
+}
+
+.dashboard-totals {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+  font-weight: bold;
 }
