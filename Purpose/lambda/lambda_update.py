@@ -256,7 +256,7 @@ def fetch_program_history(program_history):
     # Check if program_history is empty
     if not program_history:
         logger.warning("No program history records were found.")
-        return pd.DataFrame()
+        return pd.DataFrame(columns=['casefile_id', 'patient_id', 'patient_master_id', 'first_name', 'last_name', 'program_name', 'start_date', 'logged_by', 'logged_at'])
     
     # Extract patient IDs and patient master IDs from the program history.
     pids = [record['patient_id'] for record in program_history]
@@ -489,35 +489,64 @@ update_latest_records(last_update, TODAY)
 phist_response = supabase.rpc("fetch_diff_records").execute()
 program_history = phist_response.data
 phist_df = fetch_program_history(program_history)
-update_program_history(phist_df)
+if phist_df.empty:
+    logger.warning("No program history records to update.")
+else:
+    update_program_history(phist_df)
 
 # Execute stored proc to upsert latest data into the main table
-supabase.rpc("call_proc", {"p_proc_name": "upsert_latest_data"}).execute()
+before_count_response = supabase.table('latest').select('*', count='exact').execute()
+before_count = before_count_response.count
+try:
+    response = supabase.rpc("call_proc", {"p_proc_name": "upsert_latest_data"}).execute()
+    response.raise_when_api_error(response.data)
+except Exception as e:
+    logger.error(f"Error executing upsert_latest_data: {e}")
+    raise
+after_count_response = supabase.table('latest').select('*', count='exact').execute()
+after_count = after_count_response.count
+logger.info(f"LATEST TABLE UPDATED FROM {before_count} TO {after_count} RECORDS.")
 
 # Update forms
 update_ama_form()
+before_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
+before_count = before_count_response.count
 supabase.rpc("call_proc", {"p_proc_name": "upsert_ama_forms_data"}).execute()
-logger.info("AMA forms data upserted successfully.")
+after_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
+after_count = after_count_response.count
+logger.info(f"AMA FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
 
 update_detox_form()
+before_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
+before_count = before_count_response.count
 supabase.rpc("call_proc", {"p_proc_name": "upsert_detox_discharge_forms_data"}).execute()
-logger.info("Detox forms data upserted successfully.")
+after_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
+after_count = after_count_response.count
+logger.info(f"DETOX FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
 
 update_admin_discharge_form()
+before_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
+before_count = before_count_response.count
 supabase.rpc("call_proc", {"p_proc_name": "upsert_admin_discharge_data"}).execute()
-logger.info("Admin Discharge forms data upserted successfully.")
+after_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
+after_count = after_count_response.count
+logger.info(f"ADMIN FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
 
 # Update materialized views
-views = ['vw_daily_census', 'vw_program_history','vw_discharges']
+views = ['vw_program_history','vw_daily_census','vw_discharges']
 
 for view in views:
     try:
+        before_count_response = supabase.table(view).select('*', count='exact').execute()
+        before_count = before_count_response.count
         response = supabase.rpc("refresh_materialized_view", {"view_name": view}).execute()
+        after_count_response = supabase.table(view).select('*', count='exact').execute()
+        after_count = after_count_response.count
         response.raise_when_api_error(response.data)
+        logger.info(f"{view} UPDATED FROM. {before_count} TO {after_count} RECORDS.")
     except Exception as e:
         logger.error(f"Error refreshing materialized view {view}: {e}")
-    else:
-        logger.info(f"Materialized view {view} refreshed successfully.")
+
 
 # @@TODO: Add Lambda Handler
 # @@TODO: Throw execution steps into a main function
