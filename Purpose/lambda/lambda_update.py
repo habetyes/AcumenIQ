@@ -479,78 +479,91 @@ def update_detox_form():
 
     pass
 
-############# MAIN EXECUTION #################
-# Update stg_latest table with the latest records
-last_update_response = supabase.rpc("get_max_last_updated").execute()
-last_update = last_update_response.data
-update_latest_records(last_update, TODAY)
-
-# Update program history with the latest records
-phist_response = supabase.rpc("fetch_diff_records").execute()
-program_history = phist_response.data
-phist_df = fetch_program_history(program_history)
-if phist_df.empty:
-    logger.warning("No program history records to update.")
-else:
-    update_program_history(phist_df)
-
-# Execute stored proc to upsert latest data into the main table
-before_count_response = supabase.table('latest').select('*', count='exact').execute()
-before_count = before_count_response.count
-try:
-    response = supabase.rpc("call_proc", {"p_proc_name": "upsert_latest_data"}).execute()
-    response.raise_when_api_error(response.data)
-except Exception as e:
-    logger.error(f"Error executing upsert_latest_data: {e}")
-    raise
-after_count_response = supabase.table('latest').select('*', count='exact').execute()
-after_count = after_count_response.count
-logger.info(f"LATEST TABLE UPDATED FROM {before_count} TO {after_count} RECORDS.")
-
-# Update forms
-update_ama_form()
-before_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
-before_count = before_count_response.count
-supabase.rpc("call_proc", {"p_proc_name": "upsert_ama_forms_data"}).execute()
-after_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
-after_count = after_count_response.count
-logger.info(f"AMA FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
-
-update_detox_form()
-before_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
-before_count = before_count_response.count
-supabase.rpc("call_proc", {"p_proc_name": "upsert_detox_discharge_forms_data"}).execute()
-after_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
-after_count = after_count_response.count
-logger.info(f"DETOX FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
-
-update_admin_discharge_form()
-before_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
-before_count = before_count_response.count
-supabase.rpc("call_proc", {"p_proc_name": "upsert_admin_discharge_data"}).execute()
-after_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
-after_count = after_count_response.count
-logger.info(f"ADMIN FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
-
-# Update materialized views
-views = ['vw_program_history','vw_daily_census','vw_discharges']
-
-for view in views:
+def lambda_handler(event, context):
     try:
-        before_count_response = supabase.table(view).select('*', count='exact').execute()
-        before_count = before_count_response.count
-        response = supabase.rpc("refresh_materialized_view", {"view_name": view}).execute()
-        after_count_response = supabase.table(view).select('*', count='exact').execute()
-        after_count = after_count_response.count
-        response.raise_when_api_error(response.data)
-        logger.info(f"{view} UPDATED FROM. {before_count} TO {after_count} RECORDS.")
+        main()
+        return {
+            "statusCode": 200,
+            "body": json.dumps("Lambda execution finished successfully")
+        }
     except Exception as e:
-        logger.error(f"Error refreshing materialized view {view}: {e}")
+        logger.error("Error occurred: " + str(e))
+        return {
+            "statusCode": 500,
+            "body": json.dumps("Error occurred during execution")
+        }
+
+############# MAIN EXECUTION #################
+def main():
+    # Update stg_latest table with the latest records
+    last_update_response = supabase.rpc("get_max_last_updated").execute()
+    last_update = last_update_response.data
+    update_latest_records(last_update, TODAY)
+
+    # Update program history with the latest records
+    phist_response = supabase.rpc("fetch_diff_records").execute()
+    program_history = phist_response.data
+    phist_df = fetch_program_history(program_history)
+    if phist_df.empty:
+        logger.warning("No program history records to update.")
+    else:
+        update_program_history(phist_df)
+
+    # Execute stored proc to upsert latest data into the main table
+    before_count_response = supabase.table('latest').select('*', count='exact').execute()
+    before_count = before_count_response.count
+    try:
+        response = supabase.rpc("call_proc", {"p_proc_name": "upsert_latest_data"}).execute()
+        response.raise_when_api_error(response.data)
+    except Exception as e:
+        logger.error(f"Error executing upsert_latest_data: {e}")
+        raise
+    after_count_response = supabase.table('latest').select('*', count='exact').execute()
+    after_count = after_count_response.count
+    logger.info(f"LATEST TABLE UPDATED FROM {before_count} TO {after_count} RECORDS.")
+
+    # Update forms
+    update_ama_form()
+    before_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
+    before_count = before_count_response.count
+    supabase.rpc("call_proc", {"p_proc_name": "upsert_ama_forms_data"}).execute()
+    after_count_response = supabase.table('ama_forms').select('*', count='exact').execute()
+    after_count = after_count_response.count
+    logger.info(f"AMA FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
+
+    update_detox_form()
+    before_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
+    before_count = before_count_response.count
+    supabase.rpc("call_proc", {"p_proc_name": "upsert_detox_discharge_forms_data"}).execute()
+    after_count_response = supabase.table('detox_forms').select('*', count='exact').execute()
+    after_count = after_count_response.count
+    logger.info(f"DETOX FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
+
+    update_admin_discharge_form()
+    before_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
+    before_count = before_count_response.count
+    supabase.rpc("call_proc", {"p_proc_name": "upsert_admin_discharge_data"}).execute()
+    after_count_response = supabase.table('admin_discharge').select('*', count='exact').execute()
+    after_count = after_count_response.count
+    logger.info(f"ADMIN FORMS UPDATED FROM. {before_count} TO {after_count} RECORDS.")
+
+    # Update materialized views
+    views = ['vw_program_history','vw_daily_census','vw_discharges']
+
+    for view in views:
+        try:
+            before_count_response = supabase.table(view).select('*', count='exact').execute()
+            before_count = before_count_response.count
+            response = supabase.rpc("refresh_materialized_view", {"view_name": view}).execute()
+            after_count_response = supabase.table(view).select('*', count='exact').execute()
+            after_count = after_count_response.count
+            response.raise_when_api_error(response.data)
+            logger.info(f"{view} UPDATED FROM. {before_count} TO {after_count} RECORDS.")
+        except Exception as e:
+            logger.error(f"Error refreshing materialized view {view}: {e}")
+
+if __name__ == "__main__":
+    main()
 
 
-# @@TODO: Add Lambda Handler
-# @@TODO: Throw execution steps into a main function
-
-
-
-
+ 
