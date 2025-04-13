@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Card, CardContent } from '@mui/material';
 import KPIExport from './KPIExport';
+import '../styles.css'; // Import the CSS file
 
 function Dashboard() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -40,20 +41,82 @@ function Dashboard() {
     setSelectedDate(e.target.value);
   };
 
+  useEffect(() => {
+    if (selectedDate) {
+      fetchData(); // Fetch data after the date is updated
+    }
+  }, [selectedDate]); // Runs whenever selectedDate changes
+  
+  const incrementDate = () => {
+    if (selectedDate) {
+      const [year, month, day] = selectedDate.split('-').map(Number);
+      const newDate = new Date(year, month - 1, day); // Create a UTC date
+      newDate.setDate(newDate.getDate() + 1); // Increment the day in UTC
+      const updatedDate = newDate.toISOString().split('T')[0]; // Format back to YYYY-MM-DD
+      setSelectedDate(updatedDate); // Trigger state update
+    }
+  };
+  
+  const decrementDate = () => {
+    if (selectedDate) {
+      const [year, month, day] = selectedDate.split('-').map(Number);
+      const newDate = new Date(year, month - 1, day); // Create a local date
+      newDate.setDate(newDate.getDate() - 1); // Decrement the day
+      const updatedDate = newDate.toISOString().split('T')[0]; // Format back to YYYY-MM-DD
+      setSelectedDate(updatedDate); // Trigger state update
+    }
+  };
+
+  const calculateTotals = (data) => {
+    return data.reduce(
+      (totals, item) => {
+        totals.census += item.census || 0;
+        totals.admissions += item.admissions || 0;
+        totals.transfer_in += item.transfer_in || 0;
+        totals.transfer_out += item.transfer_out || 0;
+        totals.discharges += item.discharges || 0;
+        return totals;
+      },
+      { census: 0, admissions: 0, transfer_in: 0, transfer_out: 0, discharges: 0 }
+    );
+  };
+
+  const totals = calculateTotals(data);
+
+  const desiredOrder = ["Detox", "Residential", "SUD IOP", "Psych IOP", "Aftercare"];
+
+  const sortedData = [...data].sort((a, b) => {
+    return desiredOrder.indexOf(a.program_category) - desiredOrder.indexOf(b.program_category);
+  });
+
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>AcumenIQ Dashboard</h2>
+      <h2>Purpose: Daily Census</h2>
       <div>
         <TextField
           type="date"
           value={selectedDate}
           onChange={handleDateChange}
         />
-        <Button variant="contained" onClick={fetchData}>Load Data</Button>
+        <Button variant="outlined" onClick={decrementDate} style={{ marginLeft: '1rem' }}>Previous Day</Button>
+        <Button variant="outlined" onClick={incrementDate} style={{ marginLeft: '0.5rem' }}>Next Day</Button>
       </div>
       <div style={{ display: 'flex', marginTop: '1rem', gap: '1rem' }}>
-        {data.map((item, index) => (
-          <Card key={index} style={{ minWidth: '200px' }}>
+        {/* Total Card */}
+        <Card style={{ minWidth: '200px', backgroundColor: '#f0f0f0' }}>
+          <CardContent>
+            <h3>Total</h3>
+            <p>Census: {totals.census}</p>
+            <p>Admissions: {totals.admissions}</p>
+            <p>Transfers In: {totals.transfer_in}</p>
+            <p>Transfers Out: {totals.transfer_out}</p>
+            <p>Discharges: {totals.discharges}</p>
+          </CardContent>
+        </Card>
+
+        {/* Individual Program Cards */}
+        {sortedData.map((item, index) => (
+          <Card key={index} className="program-card" style={{ minWidth: '200px' }}>
             <CardContent>
               <h3>{item.program_category}</h3>
               <p>Census: {item.census}</p>

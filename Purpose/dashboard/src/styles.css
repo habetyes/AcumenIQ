@@ -1,0 +1,24 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+h2 {
+  color: #333;
+}
+
+button {
+  cursor: pointer;
+}
+
+div {
+  margin: 10px;
+}
+
+.program-card {
+  background-color: #e8f5e9; /* Light green background */
+  border: 1px solid #c8e6c9; /* Slightly darker green border */
+  border-radius: 5px;
+}

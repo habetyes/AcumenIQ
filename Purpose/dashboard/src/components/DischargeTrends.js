@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { Chart, LineElement, PointElement, LinearScale, Title, CategoryScale } from 'chart.js';
 import { TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import '../styles.css'; // Import the CSS file
 
 Chart.register(LineElement, PointElement, LinearScale, Title, CategoryScale);
 
