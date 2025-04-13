@@ -102,16 +102,16 @@ function Dashboard() {
         <Button variant="outlined" onClick={incrementDate}>Next Day</Button>
       </div>
       <div className="dashboard-totals">
-        <p>Census: {totals.census}</p>
-        <p>Admissions: {totals.admissions}</p>
-        <p>Transfers In: {totals.transfer_in}</p>
-        <p>Transfers Out: {totals.transfer_out}</p>
-        <p>Discharges: {totals.discharges}</p>
+        <div className="total-item">Census: {totals.census}</div>
+        <div className="total-item">Admissions: {totals.admissions}</div>
+        <div className="total-item">Transfers In: {totals.transfer_in}</div>
+        <div className="total-item">Transfers Out: {totals.transfer_out}</div>
+        <div className="total-item">Discharges: {totals.discharges}</div>
       </div>
       <div className="dashboard-cards">
         {/* Individual Program Cards */}
         {sortedData.map((item, index) => (
-          <Card key={index} className="card program-card">
+          <Card key={index}>
             <CardContent>
               <h3>{item.program_category}</h3>
               <p>Census: {item.census}</p>

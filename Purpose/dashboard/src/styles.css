@@ -2,11 +2,12 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f9f9f9;
+  background-color: #00838A; /* Apply background color to the whole page */
 }
 
 h2 {
-  color: #333;
+  color: white; /* Change h2 text to white */
+  text-align: center; /* Center the text horizontally */
 }
 
 button {
@@ -18,9 +19,10 @@ div {
 }
 
 .program-card {
-  background-color: #00838A; /* Purpose Branded background */
-  border: 1px solid #c8e6c9; /* Slightly darker green border */
-  border-radius: 5px;
+  background-color: unset;
+  color: unset;
+  border: unset;
+  border-radius: unset;
 }
 
 .dashboard-container {
@@ -35,6 +37,17 @@ div {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+}
+
+.dashboard-controls TextField,
+.dashboard-controls Button {
+  background-color: white; /* Set background to white */
+  border-radius: 5px; /* Add slight rounding for better aesthetics */
+}
+
+input#\:r1\: {
+  background-color: white; /* Set input background to white for the date picker */
+  border-radius: 5px; /* Add slight rounding for better aesthetics */
 }
 
 .dashboard-cards {
@@ -64,7 +77,23 @@ div {
 
 .dashboard-totals {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: space-around;
-  margin: 1rem 0;
+  margin: 0.2rem 0;
   font-weight: bold;
+  text-align: center;
+  background-color: #5bb4b8; /* Set background color for totals section */
+}
+
+.total-item {
+  flex: 1 1 100%; /* Stack items on smaller screens */
+  color: white; /* Change total-item text to white */
+  font-size: 20px;
+}
+
+@media (min-width: 768px) {
+  .total-item {
+    flex: 1 1 auto; /* Align items in a row on larger screens */
+  }
 }
