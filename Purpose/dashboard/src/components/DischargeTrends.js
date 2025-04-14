@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { Bar } from 'react-chartjs-2';
-import GaugeChart from 'react-gauge-chart'
 import { Chart, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend } from 'chart.js';
 import { TextField, Button, MenuItem } from '@mui/material';
-import DataTable from 'react-data-table-component';
-import '../styles.css'; // Import the CSS file
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import TablePagination from '@mui/material/TablePagination';
+import '../styles/DischargeTrends.css'; // Updated CSS file import
 
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
@@ -20,8 +26,9 @@ function DischargeTrends() {
   const [selectedPrograms, setSelectedPrograms] = useState(['Detox', 'Residential', 'SUD IOP', 'Psych IOP', 'Aftercare']);
   const [chartData, setChartData] = useState({});
   const [tableData, setTableData] = useState([]);
-  const [gaugeData, setGaugeData] = useState({});
   const [totals, setTotals] = useState({ total: 0, ama: 0, admin: 0, successful: 0 });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const programOptions = ['Detox', 'Residential', 'SUD IOP', 'Psych IOP', 'Aftercare'];
 
@@ -68,20 +75,22 @@ function DischargeTrends() {
 
       // Prepare data for the table
       setTableData(data);
-
-      // Prepare data for the gauge charts
-      setGaugeData({
-        ama: (ama / total) * 100,
-        admin: (admin / total) * 100,
-        successful: (successful / total) * 100,
-      });
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="discharge-trends-container">
       <h2>Discharge Trends</h2>
-      <div>
+      <div className="filters">
         <TextField
           type="date"
           label="Start Date"
@@ -103,7 +112,7 @@ function DischargeTrends() {
             onChange: (e) => setSelectedPrograms(e.target.value),
           }}
           variant="outlined"
-          style={{ marginLeft: '1rem' }}
+          className="program-select"
         >
           {programOptions.map((program) => (
             <MenuItem key={program} value={program}>
@@ -111,70 +120,99 @@ function DischargeTrends() {
             </MenuItem>
           ))}
         </TextField>
-        <Button variant="contained" onClick={fetchTrends} style={{ marginLeft: '1rem' }}>
+        <Button variant="contained" onClick={fetchTrends} className="load-trends-button">
           Load Trends
         </Button>
       </div>
 
-      <div style={{ marginTop: '2rem' }}>
-        <h3>Metrics</h3>
-        <p>Total Discharges: {totals.total}</p>
-        <p>AMA Discharges: {totals.ama} ({((totals.ama / totals.total) * 100).toFixed(1)}%)</p>
-        <p>Admin Discharges: {totals.admin} ({((totals.admin / totals.total) * 100).toFixed(1)}%)</p>
-        <p>Successful Discharges: {totals.successful} ({((totals.successful / totals.total) * 100).toFixed(1)}%)</p>
+      <div className="totals-row">
+        <div>Total Discharges: {totals.total}</div>
+        <div>AMA Discharges: {totals.ama} ({((totals.ama / totals.total) * 100).toFixed(1)}%)</div>
+        <div>Admin Discharges: {totals.admin} ({((totals.admin / totals.total) * 100).toFixed(1)}%)</div>
+        <div>Successful Discharges: {totals.successful} ({((totals.successful / totals.total) * 100).toFixed(1)}%)</div>
       </div>
 
-      <div style={{ marginTop: '2rem' }}>
-        <h3>Stacked 100% Bar Chart</h3>
-        {chartData.labels ? (
-          <Bar
-            data={chartData}
-            options={{
-              plugins: {
-                tooltip: { enabled: true },
-                legend: { position: 'top' },
-                datalabels: { display: true, formatter: value => `${value.toFixed(1)}%` },
-              },
-              responsive: true,
-              scales: {
-                x: { stacked: true },
-                y: { stacked: true, ticks: { callback: value => `${value}%` } },
-              },
+      <div className="content-row">
+        <div className="chart-container">
+          {chartData.labels ? (
+            <Bar
+              data={chartData}
+              options={{
+                plugins: {
+                  tooltip: { enabled: true },
+                  legend: { position: 'top' },
+                  datalabels: { display: true, formatter: value => `${value.toFixed(1)}%` },
+                },
+                responsive: true,
+                scales: {
+                  x: { stacked: true },
+                  y: { stacked: true, ticks: { callback: value => `${value}%` } },
+                },
+              }}
+            />
+          ) : (
+            <p>No data available</p>
+          )}
+        </div>
+
+        <div className="table-container">
+          <Button
+            variant="contained"
+            onClick={() => {
+              const csvRows = [];
+              const headers = Object.keys(tableData[0] || {});
+              csvRows.push(headers.join(','));
+              tableData.forEach(row => {
+                const values = headers.map(header => `"${row[header]}"`);
+                csvRows.push(values.join(','));
+              });
+              const csvString = csvRows.join('\n');
+              const blob = new Blob([csvString], { type: 'text/csv' });
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'discharge_trends.csv';
+              a.click();
             }}
-          />
-        ) : (
-          <p>No data available</p>
-        )}
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3>Data Table</h3>
-        <DataTable
-          columns={[
-            { name: 'Casefile ID', selector: row => row.casefile_id },
-            { name: 'Full Name', selector: row => row.full_name },
-            { name: 'Discharge Class', selector: row => row.discharge_class },
-            { name: 'Program Category', selector: row => row.program_category },
-            { name: 'Discharge Date', selector: row => row.discharge_date },
-          ]}
-          data={tableData}
-          pagination
-        />
-      </div>
-
-      <div style={{ marginTop: '2rem' }}>
-        <h3>Gauge Charts</h3>
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-          {['ama', 'admin', 'successful'].map(type => (
-            <div key={type}>
-              <GaugeChart
-                value={gaugeData[type]}
-                max={100}
-                label={`${type.toUpperCase()} (${gaugeData[type]?.toFixed(1)}%)`}
-                target={type === 'ama' ? 20 : type === 'admin' ? 10 : 70}
-              />
-            </div>
-          ))}
+            className="export-csv-button"
+          >
+            Export CSV
+          </Button>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="dense table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Casefile ID</TableCell>
+                  <TableCell align="center">Full Name</TableCell>
+                  <TableCell align="center">Discharge Class</TableCell>
+                  <TableCell align="center">Program Category</TableCell>
+                  <TableCell align="center">Discharge Date</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableData
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell align="center">{row.casefile_id}</TableCell>
+                      <TableCell align="center">{row.full_name}</TableCell>
+                      <TableCell align="center">{row.discharge_class}</TableCell>
+                      <TableCell align="center">{row.program_category}</TableCell>
+                      <TableCell align="center">{row.discharge_date}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component="div"
+              count={tableData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
         </div>
       </div>
     </div>
