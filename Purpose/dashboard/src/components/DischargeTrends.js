@@ -156,28 +156,6 @@ function DischargeTrends() {
         </div>
 
         <div className="table-container">
-          <Button
-            variant="contained"
-            onClick={() => {
-              const csvRows = [];
-              const headers = Object.keys(tableData[0] || {});
-              csvRows.push(headers.join(','));
-              tableData.forEach(row => {
-                const values = headers.map(header => `"${row[header]}"`);
-                csvRows.push(values.join(','));
-              });
-              const csvString = csvRows.join('\n');
-              const blob = new Blob([csvString], { type: 'text/csv' });
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'discharge_trends.csv';
-              a.click();
-            }}
-            className="export-csv-button"
-          >
-            Export CSV
-          </Button>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="dense table">
               <TableHead>
@@ -214,8 +192,31 @@ function DischargeTrends() {
             />
           </TableContainer>
         </div>
+        </div>
+        <Button
+          variant="contained"
+          onClick={() => {
+            const csvRows = [];
+            const headers = Object.keys(tableData[0] || {});
+            csvRows.push(headers.join(','));
+            tableData.forEach(row => {
+              const values = headers.map(header => `"${row[header]}"`);
+              csvRows.push(values.join(','));
+            });
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'discharge_trends.csv';
+            a.click();
+          }}
+          className="export-csv-button"
+        >
+          Export CSV
+        </Button>
       </div>
-    </div>
+
   );
 }
 

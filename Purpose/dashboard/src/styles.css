@@ -45,10 +45,12 @@ div {
   border-radius: 5px; /* Add slight rounding for better aesthetics */
 }
 
+/* Start Date */
 input#\:r1\: {
   background-color: white; /* Set input background to white for the date picker */
   border-radius: 5px; /* Add slight rounding for better aesthetics */
 }
+
 
 .dashboard-cards {
   display: flex;
