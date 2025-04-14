@@ -10,6 +10,7 @@ COPY . .
 # Stage 2: Development - use the base image and run the dev server
 FROM base AS development
 ENV NODE_ENV=development
+# ENV REACT_APP_REDIRECT_URL=http://localhost:3000
 EXPOSE 3000
 # In development we mount volumes from the host so a rebuild isn’t necessary.
 CMD ["npm", "start"]
@@ -19,8 +20,11 @@ FROM base AS build
 # Pass in environment variables to be embedded into the build
 ARG REACT_APP_SUPABASE_URL
 ARG REACT_APP_SUPABASE_ANON_KEY
+ARG REACT_APP_REDIRECT_URL
 ENV REACT_APP_SUPABASE_URL=$REACT_APP_SUPABASE_URL
 ENV REACT_APP_SUPABASE_ANON_KEY=$REACT_APP_SUPABASE_ANON_KEY
+ENV REACT_APP_REDIRECT_URL=$REACT_APP_REDIRECT_URL
+RUN echo "Building with REACT_APP_REDIRECT_URL=$REACT_APP_REDIRECT_URL"
 # Build the React app — output will be in the /app/build directory
 RUN npm run build
 

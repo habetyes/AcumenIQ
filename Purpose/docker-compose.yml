@@ -15,6 +15,7 @@ services:
       - CHOKIDAR_USEPOLLING=true  # Useful for file-watching inside containers
       - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
       - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
+      - REACT_APP_REDIRECT_URL=${REACT_APP_DEV_REDIRECT}
 
   # Production service: builds the static assets and serves them via Nginx.
   dashboard-prod:
@@ -26,5 +27,9 @@ services:
       args:
         REACT_APP_SUPABASE_URL: ${REACT_APP_SUPABASE_URL}
         REACT_APP_SUPABASE_ANON_KEY: ${REACT_APP_SUPABASE_ANON_KEY}
+        REACT_APP_REDIRECT_URL: ${REACT_APP_PROD_REDIRECT}
+    environment:
+      - REACT_APP_REDIRECT_URL=${REACT_APP_PROD_REDIRECT}
+    image: 864981747484.dkr.ecr.us-east-1.amazonaws.com/acumeniq/purpose:latest
     ports:
       - "80:80"
