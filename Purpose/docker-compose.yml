@@ -13,6 +13,7 @@ services:
       - ./dashboard/public:/app/public
     environment:
       - CHOKIDAR_USEPOLLING=true  # Useful for file-watching inside containers
+      - WATCHPACK_POLLING=true  # Useful for file-watching inside containers
       - REACT_APP_SUPABASE_URL=${REACT_APP_SUPABASE_URL}
       - REACT_APP_SUPABASE_ANON_KEY=${REACT_APP_SUPABASE_ANON_KEY}
       - REACT_APP_REDIRECT_URL=${REACT_APP_DEV_REDIRECT}
