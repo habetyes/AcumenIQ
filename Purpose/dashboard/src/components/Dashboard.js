@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { supabase } from '../supabaseClient';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { TextField, Button, Card, CardContent } from '@mui/material';
 import KPIExport from './KPIExport';
 import '../styles.css'; // Import the CSS file
 
+// get yesterday's date in YYYY-MM-DD format
+const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
 function Dashboard() {
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(yesterday);
   const [data, setData] = useState([]);
   const [programs, setPrograms] = useState([]);
   const navigate = useNavigate();
@@ -100,6 +103,11 @@ function Dashboard() {
         />
         <Button variant="outlined" onClick={decrementDate}>Previous Day</Button>
         <Button variant="outlined" onClick={incrementDate}>Next Day</Button>
+        <div classname='nav-dash-to-trends'>
+        <Button variant="contained" component={Link} to="/trends">
+          Go to Trends
+        </Button>
+      </div>
       </div>
       <div className="dashboard-totals">
         <div className="total-item">Census: {totals.census}</div>

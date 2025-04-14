@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import TablePagination from '@mui/material/TablePagination';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/DischargeTrends.css'; // Updated CSS file import
 
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
@@ -91,6 +92,11 @@ function DischargeTrends() {
     <div className="discharge-trends-container">
       <h2>Discharge Trends</h2>
       <div className="filters">
+      <div classname='nav-dash-to-trends'>
+                <Button variant="contained" component={Link} to="/dashboard">
+                  Go to Census
+                </Button>
+              </div>
         <TextField
           type="date"
           label="Start Date"

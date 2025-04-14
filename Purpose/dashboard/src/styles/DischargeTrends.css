@@ -46,6 +46,7 @@
   justify-content: center; /* Center horizontally */
 }
 
+
 .table-container {
   max-width: 75%;
   overflow-x: auto; /* Ensure no horizontal scrolling */
@@ -85,29 +86,19 @@
   margin-top: -4.5rem; /* Adjust as needed */
 }
 
-/* End Date */
-input#\:r3\: {
+  label[id^=":r"][id$=":-label"] {
+    font-weight: bold;
+    color: white;
+  }
+
+  input[id^=":r"][id$=":"] {
     background-color: white; /* Set input background to white for the date picker */
     border-radius: 5px; /* Add slight rounding for better aesthetics */
   }
+
+  div[id^=":r"][id$=":"] {
+    background-color: white; /* Set input background to white for the date picker */
+    border-radius: 5px; /* Add slight rounding for better aesthetics */
+  }
+
   
-  /* Program Select */
-  div#\:r5\: {
-    background-color: white; /* Set input background to white for the date picker */
-    border-radius: 5px; /* Add slight rounding for better aesthetics */
-  }
-
-  label#\:r1\:-label {
-    font-weight: bold;
-    color: white;
-  }
-
-  label#\:r3\:-label {
-    font-weight: bold;
-    color: white;
-  }
-
-  label#\:r5\:-label {
-    font-weight: bold;
-    color: white;
-  }
