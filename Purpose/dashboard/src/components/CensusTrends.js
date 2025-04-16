@@ -124,7 +124,7 @@ function CensusTrends() {
 
   return (
     <div className="dashboard-container">
-      <h2>Census Trends</h2>
+      <h2 style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}>Census Trends</h2>
       <div className="dashboard-controls">
         <Button variant="contained" onClick={setMonthToDate} component={Link} to="#" style={{ marginRight: '10px' }}>
           Month to Date

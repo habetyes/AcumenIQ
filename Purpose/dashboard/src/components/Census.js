@@ -95,7 +95,7 @@ function Census() {
 
   return (
     <div className="dashboard-container">
-      <h2>Purpose: Daily Census</h2>
+      <h2 style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}>Daily Census</h2>
       <div className="dashboard-controls">
         <TextField
           type="date"
