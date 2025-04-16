@@ -116,22 +116,22 @@ function Timeline() {
         </Button>
       </div>
       <div className="dashboard-totals">
-        <div className="total-item">Average Census: {aggregates.census.toFixed(1)}</div>
-        <div className="total-item">Total Admissions: {aggregates.admissions}</div>
-        <div className="total-item">Total Transfers In: {aggregates.transfer_in}</div>
-        <div className="total-item">Total Transfers Out: {aggregates.transfer_out}</div>
-        <div className="total-item">Total Discharges: {aggregates.discharges}</div>
+        <div className="total-item">Avg Census: {aggregates.census.toFixed(1)}</div>
+        <div className="total-item">Admissions: {aggregates.admissions}</div>
+        <div className="total-item">Transfers In: {aggregates.transfer_in}</div>
+        <div className="total-item">Transfers Out: {aggregates.transfer_out}</div>
+        <div className="total-item">Discharges: {aggregates.discharges}</div>
       </div>
       <div className="dashboard-cards">
         {programAggregates.map((programData, index) => (
           <Card key={index}>
             <CardContent>
               <h3>{programData.program}</h3>
-              <p>Average Census: {programData.averageCensus.toFixed(1)}</p>
-              <p>Total Admissions: {programData.admissions}</p>
-              <p>Total Transfers In: {programData.transfer_in}</p>
-              <p>Total Transfers Out: {programData.transfer_out}</p>
-              <p>Total Discharges: {programData.discharges}</p>
+              <p>Avg Census: {programData.averageCensus.toFixed(1)}</p>
+              <p>Admissions: {programData.admissions}</p>
+              <p>Transfers In: {programData.transfer_in}</p>
+              <p>Transfers Out: {programData.transfer_out}</p>
+              <p>Discharges: {programData.discharges}</p>
             </CardContent>
           </Card>
         ))}
