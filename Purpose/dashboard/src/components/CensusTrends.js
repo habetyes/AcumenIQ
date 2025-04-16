@@ -6,9 +6,15 @@ import KPIExport from './KPIExport';
 import '../styles.css';
 import _ from 'lodash';
 
+// get yesterday's date in YYYY-MM-DD format
+var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+const yesterday = new Date(Date.now() - tzoffset - 86400000).toISOString().split('T')[0];
+// get 7 days ago in YYYY-MM-DD format
+const sevenDaysAgo = new Date(Date.now() - tzoffset - 604800000).toISOString().split('T')[0];
+
 function CensusTrends() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(sevenDaysAgo);
+  const [endDate, setEndDate] = useState(yesterday);
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -69,7 +75,9 @@ function CensusTrends() {
 
   const calculateProgramAggregates = (data) => {
     const groupedByProgram = _.groupBy(data, 'program_category');
-    return Object.entries(groupedByProgram).map(([program, programData]) => {
+    const orderedPrograms = ["Detox", "Residential", "SUD IOP", "Psych IOP", "Aftercare"];
+
+    const programAggregates = Object.entries(groupedByProgram).map(([program, programData]) => {
       const totalCensus = programData.reduce((acc, item) => acc + (item.census || 0), 0);
       const averageCensus = programData.length > 0 ? totalCensus / programData.length : 0;
 
@@ -90,6 +98,12 @@ function CensusTrends() {
         ...totals,
       };
     });
+
+    return programAggregates.sort((a, b) => {
+      const indexA = orderedPrograms.indexOf(a.program);
+      const indexB = orderedPrograms.indexOf(b.program);
+      return indexA - indexB;
+    });
   };
 
   const aggregates = calculateAggregates(data);
@@ -97,7 +111,7 @@ function CensusTrends() {
 
   return (
     <div className="dashboard-container">
-      <h2>Purpose: Timeline</h2>
+      <h2>Census Trends</h2>
       <div className="dashboard-controls">
         <TextField
           type="date"
@@ -112,7 +126,7 @@ function CensusTrends() {
           onChange={(e) => setEndDate(e.target.value)}
         />
         <Button variant="contained" component={Link} to="/dashboard">
-          Back to Dashboard
+          Back to Census
         </Button>
       </div>
       <div className="dashboard-totals">

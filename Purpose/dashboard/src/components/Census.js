@@ -7,7 +7,8 @@ import KPIExport from './KPIExport';
 import '../styles.css'; // Import the CSS file
 
 // get yesterday's date in YYYY-MM-DD format
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+const yesterday = new Date(Date.now() - tzoffset - 86400000).toISOString().split('T')[0];
 
 function Census() {
   const [selectedDate, setSelectedDate] = useState(yesterday);
@@ -104,7 +105,7 @@ function Census() {
         <Button variant="outlined" onClick={decrementDate}>Previous Day</Button>
         <Button variant="outlined" onClick={incrementDate}>Next Day</Button>
         <div classname='nav-dash-to-trends'>
-        <Button variant="contained" component={Link} to="/trends">
+        <Button variant="contained" component={Link} to="/censustrends">
           Go to Trends
         </Button>
       </div>

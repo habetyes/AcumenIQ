@@ -17,9 +17,10 @@ import '../styles/DischargeTrends.css'; // Updated CSS file import
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
 
 // get yesterday's date in YYYY-MM-DD format
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+const yesterday = new Date(Date.now() - tzoffset - 86400000).toISOString().split('T')[0];
 // get 7 days ago in YYYY-MM-DD format
-const sevenDaysAgo = new Date(Date.now() - 604800000).toISOString().split('T')[0];
+const sevenDaysAgo = new Date(Date.now() - tzoffset - 604800000).toISOString().split('T')[0];
 
 function DischargeTrends() {
   const [startDate, setStartDate] = useState(sevenDaysAgo);
@@ -93,7 +94,7 @@ function DischargeTrends() {
       <h2>Discharge Trends</h2>
       <div className="filters">
       <div classname='nav-dash-to-trends'>
-                <Button variant="contained" component={Link} to="/dashboard">
+                <Button variant="contained" component={Link} to="/census">
                   Go to Census
                 </Button>
               </div>

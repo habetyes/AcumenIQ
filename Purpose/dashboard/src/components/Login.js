@@ -11,7 +11,7 @@ function Login() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/dashboard'); // Redirect to home if logged in
+        navigate('/census'); // Redirect to census if logged in
       }
     };
 
