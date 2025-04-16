@@ -6,7 +6,7 @@ import KPIExport from './KPIExport';
 import '../styles.css';
 import _ from 'lodash';
 
-function Timeline() {
+function CensusTrends() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [data, setData] = useState([]);
@@ -141,4 +141,4 @@ function Timeline() {
   );
 }
 
-export default Timeline;
+export default CensusTrends;

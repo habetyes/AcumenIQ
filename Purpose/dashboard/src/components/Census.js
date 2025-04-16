@@ -9,7 +9,7 @@ import '../styles.css'; // Import the CSS file
 // get yesterday's date in YYYY-MM-DD format
 const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-function Dashboard() {
+function Census() {
   const [selectedDate, setSelectedDate] = useState(yesterday);
   const [data, setData] = useState([]);
   const [programs, setPrograms] = useState([]);
@@ -136,4 +136,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Census;

@@ -1,18 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
 import DischargeTrends from './components/DischargeTrends';
-import Timeline from './components/Timeline';
+import Census from './components/Census';
+import CensusTrends from './components/CensusTrends';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/trends" element={<DischargeTrends />} />
-        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/census" element={<Census />} />
+        <Route path="/censustrends" element={<CensusTrends />} />
         <Route path="*" element={<Login />} />
       </Routes>
     </Router>
