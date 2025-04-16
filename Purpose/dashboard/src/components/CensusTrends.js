@@ -47,6 +47,19 @@ function CensusTrends() {
     fetchData();
   }, [startDate, endDate]);
 
+  const setMonthToDate = () => {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+    setStartDate(firstDayOfMonth);
+    setEndDate(yesterday);
+  };
+
+  const setLast7Days = () => {
+    const eightDaysAgo = new Date(Date.now() - tzoffset - 8 * 86400000).toISOString().split('T')[0];
+    setStartDate(eightDaysAgo);
+    setEndDate(yesterday);
+  };
+
   const calculateAggregates = (data) => {
     const groupedByDate = _.groupBy(data, 'census_date');
     const dailyTotals = Object.values(groupedByDate).map((dayData) => {
@@ -113,17 +126,25 @@ function CensusTrends() {
     <div className="dashboard-container">
       <h2>Census Trends</h2>
       <div className="dashboard-controls">
+        <Button variant="contained" onClick={setMonthToDate} component={Link} to="#" style={{ marginRight: '10px' }}>
+          Month to Date
+        </Button>
+        <Button variant="contained" onClick={setLast7Days} component={Link} to="#" style={{ marginRight: '10px' }}>
+          Last 7 Days
+        </Button>
         <TextField
           type="date"
           label="Start Date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
+          style={{ marginRight: '10px' }}
         />
         <TextField
           type="date"
           label="End Date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
+          style={{ marginRight: '10px' }}
         />
         <Button variant="contained" component={Link} to="/dashboard">
           Back to Census
