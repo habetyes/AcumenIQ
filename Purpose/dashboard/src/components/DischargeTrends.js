@@ -93,11 +93,6 @@ function DischargeTrends() {
     <div className="discharge-trends-container">
       <h2>Discharge Trends</h2>
       <div className="filters">
-      <div classname='nav-dash-to-trends'>
-                <Button variant="contained" component={Link} to="/census">
-                  Go to Census
-                </Button>
-              </div>
         <TextField
           type="date"
           label="Start Date"

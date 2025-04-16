@@ -146,9 +146,6 @@ function CensusTrends() {
           onChange={(e) => setEndDate(e.target.value)}
           style={{ marginRight: '10px' }}
         />
-        <Button variant="contained" component={Link} to="/dashboard">
-          Back to Census
-        </Button>
       </div>
       <div className="dashboard-totals">
         <div className="total-item">Avg Census: {aggregates.census.toFixed(1)}</div>

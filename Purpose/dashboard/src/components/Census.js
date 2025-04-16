@@ -104,11 +104,6 @@ function Census() {
         />
         <Button variant="outlined" onClick={decrementDate}>Previous Day</Button>
         <Button variant="outlined" onClick={incrementDate}>Next Day</Button>
-        <div classname='nav-dash-to-trends'>
-        <Button variant="contained" component={Link} to="/censustrends">
-          Go to Trends
-        </Button>
-      </div>
       </div>
       <div className="dashboard-totals">
         <div className="total-item">Census: {totals.census}</div>
